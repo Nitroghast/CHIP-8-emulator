@@ -1,11 +1,13 @@
 #pragma once
+#include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <stdio.h>
+#include <ctype.h>
 #define PIXEL_CHAR *
 #define FONT_START 0x050
 #define FONT_SIZE  (sizeof(font))
@@ -28,6 +30,11 @@ typedef enum {
     programCounterOverflow
 } fetchError;
 
+typedef enum {
+    COSMAC_VIP,
+    modern
+} shiftBehavior;
+
 typedef struct {
     uint16_t stack[STACK_SIZE];
     uint16_t indexRegister;
@@ -42,7 +49,8 @@ typedef struct {
 } CHIP8;
 
 void resetMachine (CHIP8 *chip);
-void drawScreen (CHIP8 *chip);
+void intToBits (uint8_t x, bool bits[8]);
+void render(bool display[32][64]);
 int loadProgram (CHIP8 *chip, const char *path);
 fetchError fetch (CHIP8 *chip, uint16_t *instruction);
 stackError push (CHIP8 *chip, const uint16_t val);

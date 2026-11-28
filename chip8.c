@@ -27,6 +27,23 @@ void resetMachine (CHIP8 *chip) {
     chip->PC = PROG_START;
 }
 
+void intToBits (uint8_t x, bool bits[8]) {
+    for (size_t i = 0; i < 8; i++) {
+        bits[i] = (x >> (7 - i)) & 1;
+    }
+}
+
+void render(bool display[32][64]) {
+    printf("\x1b[H");
+    for (int y = 0; y < 32; y++) {
+        for (int x = 0; x < 64; x++) {
+            printf("%s", display[y][x] ? "██" : "  ");
+        }
+        printf("\n");
+    }
+    fflush(stdout);
+}
+
 int loadProgram (CHIP8 *chip, const char *path) {
     FILE *f;
     if ((f = fopen(path, "rb")) == NULL) {
